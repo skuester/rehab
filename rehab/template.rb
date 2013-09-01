@@ -1,23 +1,23 @@
 class Rehab::Template
-	attr_reader :source, :scope
-	attr_accessor :buffers, :buffer
-
+	attr_reader :source, :scope, :stream
+	attr_accessor :stream_stack
 
 	def initialize(source)
 		@source = source
-		@buffers = []
-		@generator = ::Rehab::ArrayGenerator.new
-		@buffers << @generator
-		@buffer = @buffers.last
+		@stream_stack = []
+		# open the root stream
+		open_stream do
+			::Rehab::Streams::Memory.new
+		end
 	end
 
 
 	def render(context)
 		@scope = context
-		source.lines.each do |line|
+		source.lines do |line|
 			render_line line
 		end
-		@buffer.flush
+		stream.close
 	end
 
 
@@ -25,7 +25,7 @@ private
 
 
 	def render_line(line)
-		buffer << render_inline_expressions(line)
+		stream << render_inline_expressions(line)
 	end
 
 
@@ -47,9 +47,14 @@ private
 	end
 
 
-	def open_buffer
-		buffers << Rehab::Buffer.new
-		@buffer = buffers.last
+	def open_stream
+		stream_stack << yield
+		@stream = stream_stack.last
 	end
 
+
+	def close_stream
+		complete = stream_stack.shift
+		complete.close
+	end
 end
