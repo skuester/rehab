@@ -14,6 +14,8 @@
 		<p>No posts yet</p>
 	# end
 
+	<p>Show {{ thing.something }}</p> # if thing.something
+
 	# render posts
 		-- grabs _post.html with context: { post: x }
 
