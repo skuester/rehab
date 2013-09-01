@@ -1,0 +1,22 @@
+<html>
+<body>
+	# include header.html
+
+	# for post in posts <!-- ignore section if posts missing or null -->
+	# posts <!-- minimal syntax -->
+		<h1>{{ post.title }}</h1>
+		<p>{{ post.author }}</p> <!-- ignore the whole line if something missing -->
+		<!-- alternative -->
+		<p>{{ post.author_email || 'No Email' }}</p>
+
+		<p>{{ post.content | markdown }}</p>
+	# else
+		<p>No posts yet</p>
+	# end
+
+	# render posts
+		-- grabs _post.html with context: { post: x }
+
+	# include footer.html
+</body>
+</html>
