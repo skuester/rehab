@@ -1,9 +1,18 @@
 # namespace
 module Rehab
 	VERSION = '0.1.0'
+
+
 end
 
-require_relative 'rehab/streams'
-require_relative 'rehab/template'
+require 'temple'
+require 'tilt'
+# require_relative 'rehab/array_generator'
+require_relative 'rehab/filter'
+require_relative 'rehab/interpolation'
+require_relative 'rehab/parser'
+require_relative 'rehab/engine'
 
-# input stream >> process >> output stream
+module Rehab
+	Template = Temple::Templates::Tilt(Rehab::Engine, :register_as => 'html')
+end

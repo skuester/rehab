@@ -8,6 +8,8 @@
 		<p>{{ post.author }}</p> <!-- ignore the whole line if something missing -->
 		<!-- alternative -->
 		<p>{{ post.author_email || 'No Email' }}</p>
+		<!-- eventually allow custom elements? -->
+		<testimonial>These guys are awesome!</testimonial>
 
 		<p>{{ post.content | markdown }}</p>
 	# else
