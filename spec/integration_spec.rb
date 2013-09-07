@@ -1,7 +1,7 @@
 require 'ostruct'
 require_relative "../rehab"
 
-describe "Rehab expression" do
+describe "Rehab interpolation" do
 	let(:scope) do
 		OpenStruct.new(
 			item: OpenStruct.new(greet: 'World'),
@@ -32,15 +32,17 @@ describe "Rehab expression" do
 	end
 
 
-	xit "doesn't care about white space" do
-		out = Rehab::Template.new('Hello {{item.greet         }}').render(scope)
+	it "doesn't care about white space" do
+		out = Rehab::Template.new { 'Hello {{item.greet         }}' }.render(scope)
 		expect(out).to eq 'Hello World'
 	end
 
 
-	xit "is a plain ruby expression" do
-		src = "You are so {{ awesome ? 'Awesome' : 'Meh' }}"
-		out = Rehab::Template.new(src).render(scope)
+	it "is a plain ruby expression" do
+		out = Rehab::Template.new {
+			"You are so {{ awesome ? 'Awesome' : 'Meh' }}"
+		}.render(scope)
+
 		expect(out).to eq "You are so Meh"
 	end
 end
