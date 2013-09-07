@@ -82,21 +82,21 @@ describe "Rehab control flow statement" do
 		src = <<-EOF
 		first line
 		# if true_condition
-			A true
+			A main
 		# else
-			A false
+			A else
 		# end
 		# if false_condition
-			B true
+			B main
 		# else
-			B false
+			B else
 		# end
 		EOF
 
 		out = <<-EOF
 		first line
-			A true
-			B false
+			A main
+			B else
 		EOF
 
 		expect( Rehab::Template.new { src }.render(scope) ).to eq out
