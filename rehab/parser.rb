@@ -23,13 +23,14 @@ protected
 	end
 
 
-	CONTROL = /^\s*#/m
+	CONTROL = /\A\s*#\s*(.*)$/
 	EXPRESSION = /\{\{/m
 	def parse_line
 		# binding.pry
 		case @line
 		when CONTROL
-			# out << [:rehab, :control, @line]
+			# binding.pry
+			out << [:rehab, :control, $1]
 		when EXPRESSION
 			out << [:rehab, :interpolate, @line]
 		else

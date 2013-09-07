@@ -55,10 +55,30 @@ describe "Rehab control flow statement" do
 			item: OpenStruct.new(greet: 'World'),
 			true_condition: true,
 			false_condition: false
-			)
+		)
 	end
 
-	xit "renders if else" do
+	it "renders a block without 'do'" do
+		src = <<-EOF
+		<ul>
+		# 3.times
+			<li>Hello</li>
+		#end
+		</ul>
+		EOF
+
+		out = <<-EOF
+		<ul>
+			<li>Hello</li>
+			<li>Hello</li>
+			<li>Hello</li>
+		</ul>
+		EOF
+
+		expect(Rehab::Template.new { src }.render(scope)).to eq out
+	end
+
+	it "renders if else" do
 		src = <<-EOF
 		first line
 		# if true_condition
@@ -75,8 +95,8 @@ describe "Rehab control flow statement" do
 
 		out = <<-EOF
 		first line
-		A true
-		B false
+			A true
+			B false
 		EOF
 
 		expect( Rehab::Template.new { src }.render(scope) ).to eq out

@@ -10,7 +10,10 @@ require 'tilt'
 
 require_relative 'rehab/filter'
 require_relative 'rehab/interpolation'
+require_relative 'rehab/control'
+require_relative 'rehab/do_filter'
 require_relative 'rehab/parser'
+
 require_relative 'rehab/engine'
 
 module Rehab
