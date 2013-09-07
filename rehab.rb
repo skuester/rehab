@@ -7,7 +7,7 @@ end
 
 require 'temple'
 require 'tilt'
-# require_relative 'rehab/array_generator'
+
 require_relative 'rehab/filter'
 require_relative 'rehab/interpolation'
 require_relative 'rehab/parser'
