@@ -1,104 +1,109 @@
 require 'ostruct'
 require_relative "../rehab"
 
-describe "Rehab interpolation" do
-	let(:scope) do
-		OpenStruct.new(
-			item: OpenStruct.new(greet: 'World'),
-			awesome: false
+describe Rehab do
+	def template(src)
+		Rehab::Template.new { src }.render(scope)
+	end
+
+	describe "interpolation" do
+		let(:scope) do
+			OpenStruct.new(
+				item: OpenStruct.new(greet: 'World'),
+				awesome: false
+				)
+		end
+
+
+		it "puts a variable from scope" do
+			src = 'Hello {{ item.greet }} and {{ item.greet }}'
+			out = 'Hello World and World'
+			expect(template src).to eq out
+		end
+
+
+		it "renders multiple lines" do
+			src = <<-EOF
+			Hello {{ item.greet }}
+			Hello {{ item.greet }}
+			EOF
+
+			out = <<-EOF
+			Hello World
+			Hello World
+			EOF
+			expect(template src).to eq out
+		end
+
+
+		it "doesn't care about white space" do
+			src = 'Hello {{item.greet         }}'
+			out = 'Hello World'
+			expect(template src).to eq out
+		end
+
+
+		it "is a plain ruby expression" do
+			src = "You are so {{ awesome ? 'Awesome' : 'Meh' }}"
+			out = "You are so Meh"
+			expect(template src).to eq out
+		end
+	end
+
+
+
+
+	describe "control flow" do
+		let(:scope) do
+			OpenStruct.new(
+				item: OpenStruct.new(greet: 'World'),
+				true_condition: true,
+				false_condition: false
 			)
-	end
-
-	it "puts a variable from scope" do
-		out = Rehab::Template.new { 'Hello {{ item.greet }} and {{ item.greet }}' }.render(scope)
-		expect(out).to eq 'Hello World and World'
-	end
+		end
 
 
-	it "renders multiple lines" do
-		src = <<-EOF
-		Hello {{ item.greet }}
-		Hello {{ item.greet }}
-		EOF
+		it "renders a plain ruby block without 'do'" do
+			src = <<-EOF
+			<ul>
+			# 3.times
+				<li>Hello</li>
+			#end
+			</ul>
+			EOF
 
-		out = <<-EOF
-		Hello World
-		Hello World
-		EOF
-
-		expect(
-			Rehab::Template.new { src }.render(scope)
-		).to eq out
-	end
-
-
-	it "doesn't care about white space" do
-		out = Rehab::Template.new { 'Hello {{item.greet         }}' }.render(scope)
-		expect(out).to eq 'Hello World'
-	end
+			out = <<-EOF
+			<ul>
+				<li>Hello</li>
+				<li>Hello</li>
+				<li>Hello</li>
+			</ul>
+			EOF
+			expect(template src).to eq out
+		end
 
 
-	it "is a plain ruby expression" do
-		out = Rehab::Template.new {
-			"You are so {{ awesome ? 'Awesome' : 'Meh' }}"
-		}.render(scope)
+		it "renders if else" do
+			src = <<-EOF
+			first line
+			# if true_condition
+				A main
+			# else
+				A else
+			# end
+			# if false_condition
+				B main
+			# else
+				B else
+			# end
+			EOF
 
-		expect(out).to eq "You are so Meh"
-	end
-end
-
-
-
-describe "Rehab control flow statement" do
-	let(:scope) do
-		OpenStruct.new(
-			item: OpenStruct.new(greet: 'World'),
-			true_condition: true,
-			false_condition: false
-		)
-	end
-
-	it "renders a block without 'do'" do
-		src = <<-EOF
-		<ul>
-		# 3.times
-			<li>Hello</li>
-		#end
-		</ul>
-		EOF
-
-		out = <<-EOF
-		<ul>
-			<li>Hello</li>
-			<li>Hello</li>
-			<li>Hello</li>
-		</ul>
-		EOF
-
-		expect(Rehab::Template.new { src }.render(scope)).to eq out
-	end
-
-	it "renders if else" do
-		src = <<-EOF
-		first line
-		# if true_condition
-			A main
-		# else
-			A else
-		# end
-		# if false_condition
-			B main
-		# else
-			B else
-		# end
-		EOF
-
-		out = <<-EOF
-		first line
-			A main
-			B else
-		EOF
-
-		expect( Rehab::Template.new { src }.render(scope) ).to eq out
+			out = <<-EOF
+			first line
+				A main
+				B else
+			EOF
+			expect(template src).to eq out
+		end
 	end
 end
