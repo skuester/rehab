@@ -105,5 +105,33 @@ describe Rehab do
 			EOF
 			expect(template src).to eq out
 		end
+
+	end
+
+
+
+
+	describe "special controls" do
+		let(:scope) do
+			OpenStruct.new people: [
+				OpenStruct.new(name: 'Bill'),
+				OpenStruct.new(name: 'Fred')
+			]
+		end
+
+
+		it "renders for ... in" do
+			src = <<-EOF
+			# for person in people
+				<p>{{ person.name }}</p>
+			# end
+			EOF
+
+			out = <<-EOF
+				<p>Bill</p>
+				<p>Fred</p>
+			EOF
+			expect(template src).to eq out
+		end
 	end
 end

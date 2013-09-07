@@ -10,7 +10,7 @@ module Rehab
 					block << [:static, $`]
 					exp, string = parse_expression $'
 					block << [:dynamic, exp]
-				when "\n"
+				else
 					block << [:static, string]
 					string = ""
 				end
