@@ -2,8 +2,8 @@ require 'ostruct'
 require_relative "../rehab"
 
 describe Rehab do
-	def template(src)
-		Rehab::Template.new { src }.render(scope)
+	def template(src, opts = {})
+		Rehab::Template.new(opts) { src }.render(scope)
 	end
 
 	describe "interpolation" do
@@ -113,10 +113,13 @@ describe Rehab do
 
 	describe "special controls" do
 		let(:scope) do
-			OpenStruct.new people: [
-				OpenStruct.new(name: 'Bill'),
-				OpenStruct.new(name: 'Fred')
-			]
+			OpenStruct.new({
+				message: 'Hello World!',
+				people: [
+					OpenStruct.new(name: 'Bill'),
+					OpenStruct.new(name: 'Fred')
+				]
+			})
 		end
 
 
@@ -132,6 +135,28 @@ describe Rehab do
 				<p>Fred</p>
 			EOF
 			expect(template src).to eq out
+		end
+
+
+		it "renders include partials" do
+			src = <<-EOF
+			# include my_partial.html
+			<p>content</p>
+			EOF
+
+			# an file_resolver is anything that responds to "call"
+			# it should return the contents of the file
+			resolver = ->(ignore) {
+			<<-EOF
+			<p>{{ message }}</p>
+			EOF
+			}
+
+			out = <<-EOF
+			<p>Hello World!</p>
+			<p>content</p>
+			EOF
+			expect(template(src, {file_resolver: resolver})).to eq out
 		end
 	end
 end

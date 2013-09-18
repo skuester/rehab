@@ -1,10 +1,8 @@
-class Rehab::Parser
+class Rehab::Parser < Temple::Parser
 	attr_reader :source, :out, :line
 
 
-	def initialize(opts)
-		super()
-	end
+	define_options :file_resolver
 
 
 	def call(source)
@@ -23,18 +21,24 @@ protected
 	end
 
 
+	INCLUDE = /\A\s*#\s*(include)\s*(\S*)/
 	CONTROL = /\A\s*#\s*(.*)$/
 	EXPRESSION = /\{\{/m
 	def parse_line
-		# binding.pry
 		case @line
+		when INCLUDE
+			out << parse_include($2)
 		when CONTROL
-			# binding.pry
 			out << [:rehab, :control, $1]
 		when EXPRESSION
 			out << [:rehab, :interpolate, @line]
 		else
 			out << [:static, @line]
 		end
+	end
+
+	def parse_include(path)
+		included_content = options[:file_resolver].call(path)
+		self.class.new.call(included_content)
 	end
 end
