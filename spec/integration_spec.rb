@@ -137,36 +137,55 @@ describe Rehab do
 		end
 	end
 
-	describe "includes" do
+	describe "include" do
 		let(:scope) do
 			OpenStruct.new(
-				message: 'Hello World!'
+				message: 'Hello World!',
+				people: [
+					OpenStruct.new(name: 'Bill'),
+					OpenStruct.new(name: 'Fred')
+				]
 			)
 		end
 
 		# an file_provider is anything that responds to "call"
 		# it should return the contents of the file
-		let(:provider) do
-			->(ignore) {
-			<<-EOF
-			<p>{{ message }}</p>
-			EOF
-			}
-		end
 
-
-		it "renders include partials" do
+		it "renders partials" do
 			src = <<-EOF
 			# include my_partial.html
 			<p>content</p>
 			EOF
 
+			file = ->(ignore) {
+			<<-EOF
+			<p>{{ message }}</p>
+			EOF
+			}
 
 			out = <<-EOF
 			<p>Hello World!</p>
 			<p>content</p>
 			EOF
-			expect(template(src, {file_provider: provider})).to eq out
+			expect(template(src, {file_provider: file})).to eq out
+		end
+
+		it "works with for .. in comprehension" do
+			src = <<-EOF
+			# include my_partial.html for person in people
+			EOF
+
+			file = ->(ignore) {
+			<<-EOF
+			<p>{{ person.name }}</p>
+			EOF
+			}
+
+			out = <<-EOF
+			<p>Bill</p>
+			<p>Fred</p>
+			EOF
+			expect(template(src, {file_provider: file})).to eq out
 		end
 	end
 end
