@@ -2,7 +2,7 @@ class Rehab::Parser < Temple::Parser
 	attr_reader :source, :out, :line
 
 
-	define_options :file_resolver
+	define_options :file_provider
 
 
 	def call(source)
@@ -38,7 +38,7 @@ protected
 	end
 
 	def parse_include(path)
-		included_content = options[:file_resolver].call(path)
+		included_content = options[:file_provider].call(path)
 		self.class.new.call(included_content)
 	end
 end

@@ -114,7 +114,6 @@ describe Rehab do
 	describe "special controls" do
 		let(:scope) do
 			OpenStruct.new({
-				message: 'Hello World!',
 				people: [
 					OpenStruct.new(name: 'Bill'),
 					OpenStruct.new(name: 'Fred')
@@ -136,6 +135,24 @@ describe Rehab do
 			EOF
 			expect(template src).to eq out
 		end
+	end
+
+	describe "includes" do
+		let(:scope) do
+			OpenStruct.new(
+				message: 'Hello World!'
+			)
+		end
+
+		# an file_provider is anything that responds to "call"
+		# it should return the contents of the file
+		let(:provider) do
+			->(ignore) {
+			<<-EOF
+			<p>{{ message }}</p>
+			EOF
+			}
+		end
 
 
 		it "renders include partials" do
@@ -144,19 +161,12 @@ describe Rehab do
 			<p>content</p>
 			EOF
 
-			# an file_resolver is anything that responds to "call"
-			# it should return the contents of the file
-			resolver = ->(ignore) {
-			<<-EOF
-			<p>{{ message }}</p>
-			EOF
-			}
 
 			out = <<-EOF
 			<p>Hello World!</p>
 			<p>content</p>
 			EOF
-			expect(template(src, {file_resolver: resolver})).to eq out
+			expect(template(src, {file_provider: provider})).to eq out
 		end
 	end
 end

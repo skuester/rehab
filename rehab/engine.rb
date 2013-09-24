@@ -1,7 +1,7 @@
 module Rehab
 	class Engine < Temple::Engine
 
-		use Rehab::Parser, :file_resolver
+		use Rehab::Parser, :file_provider
 
 		use Rehab::Interpolation
 		use Rehab::DoFilter
