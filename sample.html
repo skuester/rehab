@@ -2,24 +2,19 @@
 <body>
 	# include header.html
 
-	# for post in posts <!-- ignore section if posts missing or null -->
-	# posts <!-- minimal syntax -->
-		<h1>{{ post.title }}</h1>
-		<p>{{ post.author }}</p> <!-- ignore the whole line if something missing -->
-		<!-- alternative -->
-		<p>{{ post.author_email || 'No Email' }}</p>
-		<!-- eventually allow custom elements? -->
-		<testimonial>These guys are awesome!</testimonial>
 
-		<p>{{ post.content | markdown }}</p>
-	# else
+	# if posts.empty?
 		<p>No posts yet</p>
 	# end
 
-	<p>Show {{ thing.something }}</p> # if thing.something
 
-	# render posts
-		-- grabs _post.html with context: { post: x }
+	# for post in posts <!-- ignore section if posts missing or null -->
+		<h1>{{ post.title }}</h1>
+		<!-- alternative -->
+		<p>{{ post.author_email || 'No Email' }}</p>
+		<p>{{ post.content }}</p>
+	# end
+
 
 	# include footer.html
 </body>
