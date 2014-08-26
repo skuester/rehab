@@ -3,9 +3,39 @@ Rehab
 
 Simple, Portable Template Language.
 
+
+Installation
+------------
+Add this line to your application's Gemfile:
+
+	gem 'rehab'
+
+And then execute:
+
+	$ bundle
+
+Or install it yourself as:
+
+	$ gem install rehab
+
+
+
+Usage
+-----
+You can use Rehab like any tilt-like template.
+
 	Rehab::Template.new(options) { "template_source" }.render(scope)
 
-See the tests and `sample.html` for documentation.
+See `spec/integration_spec.rb` and `sample.html` for more documentation.
+
+### Options
+
+```ruby
+# OPTIONAL
+options[:file_provider] =>
+	# an object with a .call method that returns file content from a path string
+	->(path){  File.read(path) }
+```
 
 
 Syntax Overview
