@@ -1,5 +1,5 @@
 require 'ostruct'
-require_relative "../rehab"
+require_relative "../lib/rehab"
 
 describe Rehab do
 	def template(src, opts = {})
