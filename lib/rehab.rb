@@ -3,7 +3,7 @@ require 'tilt'
 
 
 module Rehab
-	VERSION = '0.1.0'
+	VERSION = '0.1.1'
 end
 
 require 'rehab/filter'
