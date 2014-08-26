@@ -170,23 +170,22 @@ describe Rehab do
 
 		# an file_provider is anything that responds to "call"
 		# it should return the contents of the file
-
-		it "renders partials" do
+		it "renders partials using a file provider" do
 			src = <<-EOF
 			# include my_partial.html
 			<p>content</p>
 			EOF
 
-			file = ->(ignore) {
-			<<-EOF
+			file = double("File Provider", call: <<-EOF
 			<p>{{ message }}</p>
 			EOF
-			}
+			)
 
 			out = <<-EOF
 			<p>Hello World!</p>
 			<p>content</p>
 			EOF
+			expect( file ).to receive(:call).with('my_partial.html')
 			expect(template(src, {file_provider: file})).to eq out
 		end
 
