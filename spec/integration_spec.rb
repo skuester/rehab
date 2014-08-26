@@ -83,6 +83,26 @@ describe Rehab do
 		end
 
 
+		it "renders a plain ruby block WITH 'do' and block" do
+			src = <<-EOF
+			<ul>
+			# 3.times do |n|
+				<li>Hello {{ n }}</li>
+			# end
+			</ul>
+			EOF
+
+			out = <<-EOF
+			<ul>
+				<li>Hello 0</li>
+				<li>Hello 1</li>
+				<li>Hello 2</li>
+			</ul>
+			EOF
+			expect(template src).to eq out
+		end
+
+
 		it "renders if else" do
 			src = <<-EOF
 			first line
