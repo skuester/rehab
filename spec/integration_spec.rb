@@ -189,6 +189,31 @@ describe Rehab do
 			expect(template(src, {file_provider: file})).to eq out
 		end
 
+		it "renders partials using a default file provider" do
+			File.open('tmp/my_partial.html', 'w') { |f| f.write "<p>{{ message }}</p>" }
+			src = <<-EOF
+			# include tmp/my_partial.html
+			<p>content</p>
+			EOF
+
+			out = <<-EOF
+<p>Hello World!</p>
+			<p>content</p>
+			EOF
+			expect(template(src)).to eq out
+			File.delete('tmp/my_partial.html')
+		end
+
+
+		it "provides a meaningful error when template is missing" do
+			src = <<-EOF
+			# include missing.html
+			<p>content</p>
+			EOF
+
+			expect{ template(src) }.to raise_error Rehab::MissingPartialError, "Could not find missing.html"
+		end
+
 		it "works with for .. in comprehension" do
 			src = <<-EOF
 			# include my_partial.html for person in people

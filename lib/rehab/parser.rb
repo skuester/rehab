@@ -48,8 +48,12 @@ protected
 
 
 	def parse_file_content(path)
-		included_content = options[:file_provider].call(path)
+		included_content = file_provider.call(path)
 		self.class.new.call(included_content)
+	end
+
+	def file_provider
+		options[:file_provider] || Rehab::FileProvider
 	end
 
 
