@@ -1,3 +1,10 @@
+PATH
+  remote: .
+  specs:
+    rehab (0.1.2)
+      temple
+      tilt
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -24,6 +31,7 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    rake (10.3.1)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.1)
       ffi (>= 0.5.0)
@@ -46,8 +54,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 1.5)
   guard
   guard-rspec
+  rake
+  rehab!
   rspec
-  temple
-  tilt
