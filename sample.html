@@ -15,6 +15,14 @@
 		<p>{{ post.content }}</p>
 	# end
 
+	<!-- ruby blocks -->
+	# 3.times do |n|
+		<h1>Hello World {{ n }}</h1>
+	# end
+
+	<!-- include partial for collection -->
+	# include partial.html for post in posts
+
 
 	# include footer.html
 </body>
