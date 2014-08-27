@@ -126,6 +126,26 @@ describe Rehab do
 			expect(template src).to eq out
 		end
 
+		it "ignores # statements that are not on their own lines" do
+			src = <<-EOF
+			# 3.times
+			<p>Hello</p>
+			#end
+			should be text: # if i_did_this_right
+			should# unless i_am_mistaken be text
+			public service anouncement: don't style #ids
+			EOF
+
+			out = <<-EOF
+			<p>Hello</p>
+			<p>Hello</p>
+			<p>Hello</p>
+			should be text: # if i_did_this_right
+			should# unless i_am_mistaken be text
+			public service anouncement: don't style #ids
+			EOF
+			expect(template src).to eq out
+		end
 	end
 
 
